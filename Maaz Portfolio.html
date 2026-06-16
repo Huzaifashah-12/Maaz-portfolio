@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki Architecture Portfolio — Maaz</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D98A;
+    --gold-dark: #8B6914;
+    --dark: #0D0D0F;
+    --dark2: #161618;
+    --dark3: #1E1E22;
+    --dark4: #2A2A30;
+    --text: #E8E6E0;
+    --text-muted: #8A8880;
+    --text-dim: #5A5855;
+    --accent: #4A90D9;
+    --green: #5BAF7A;
+    --purple: #9B7FD4;
+    --border: rgba(201,168,76,0.15);
+    --border-dim: rgba(255,255,255,0.06);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,13,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border-dim);
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo { font-weight: 700; font-size: 15px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.5px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(74,144,217,0.04) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.03;
+    background-image: linear-gradient(var(--gold) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--gold) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; max-width: 800px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.1); border: 0.5px solid var(--border);
+    color: var(--gold); font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 20px; margin-bottom: 32px;
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 7vw, 80px);
+    font-weight: 700;
+    line-height: 1.08;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+  h1 span { color: var(--gold); }
+  .hero-sub {
+    font-size: 18px; color: var(--text-muted); max-width: 560px; margin: 0 auto 48px;
+    font-weight: 300; line-height: 1.8;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 60px; margin-top: 64px;
+    padding-top: 64px; border-top: 0.5px solid var(--border-dim);
+  }
+  .stat-num { font-size: 36px; font-weight: 700; color: var(--gold); display: block; }
+  .stat-label { font-size: 12px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* SECTIONS */
+  section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px; display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700; color: var(--text);
+    margin-bottom: 16px; line-height: 1.2;
+  }
+  .section-sub { font-size: 16px; color: var(--text-muted); max-width: 520px; margin-bottom: 60px; }
+
+  /* SERVICES GRID */
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .service-card {
+    background: var(--dark2); border: 0.5px solid var(--border-dim);
+    border-radius: 12px; padding: 32px;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+  .service-card:hover { border-color: var(--border); transform: translateY(-2px); }
+  .service-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: rgba(201,168,76,0.1); border: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; font-size: 20px;
+  }
+  .service-card h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  .service-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+  /* PORTFOLIO PROJECTS */
+  .project { margin-bottom: 80px; }
+  .project-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 40px; margin-bottom: 40px; flex-wrap: wrap;
+  }
+  .project-meta { flex: 1; min-width: 280px; }
+  .project-tag {
+    display: inline-block; font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold);
+    background: rgba(201,168,76,0.08); border: 0.5px solid var(--border);
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+  }
+  .project-title { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.25; }
+  .project-desc { font-size: 15px; color: var(--text-muted); line-height: 1.75; max-width: 480px; }
+  .project-results {
+    display: flex; gap: 24px; flex-wrap: wrap; margin-top: 24px;
+  }
+  .result-pill {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--green);
+    background: rgba(91,175,122,0.08); border: 0.5px solid rgba(91,175,122,0.2);
+    padding: 6px 14px; border-radius: 20px;
+  }
+  .result-pill::before { content: '✓'; font-weight: 700; }
+
+  /* WIKI MOCKUP */
+  .wiki-mockup {
+    background: var(--dark2); border: 0.5px solid var(--border-dim);
+    border-radius: 14px; overflow: hidden;
+  }
+  .mockup-bar {
+    background: var(--dark3); padding: 12px 20px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 0.5px solid var(--border-dim);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #FF5F57; } .dot.y { background: #FEBC2E; } .dot.g { background: #28C840; }
+  .mockup-url { flex: 1; background: var(--dark4); border-radius: 6px; padding: 5px 12px; font-size: 11px; color: var(--text-dim); font-family: monospace; }
+  .mockup-body { display: grid; grid-template-columns: 220px 1fr; min-height: 380px; }
+  .wiki-sidebar {
+    background: var(--dark3); border-right: 0.5px solid var(--border-dim);
+    padding: 20px 0;
+  }
+  .sidebar-section { padding: 0 16px 20px; }
+  .sidebar-heading { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; padding: 0 4px; }
+  .sidebar-item {
+    display: block; padding: 6px 8px; border-radius: 6px;
+    font-size: 12px; color: var(--text-muted); cursor: pointer;
+    text-decoration: none; margin-bottom: 1px;
+  }
+  .sidebar-item:hover, .sidebar-item.active { background: rgba(201,168,76,0.08); color: var(--gold); }
+  .sidebar-item.active { font-weight: 500; }
+  .sidebar-sub { padding-left: 16px; }
+  .sidebar-sub .sidebar-item { font-size: 11px; }
+  .wiki-content { padding: 28px 32px; overflow: hidden; }
+  .wiki-breadcrumb { font-size: 11px; color: var(--text-dim); margin-bottom: 20px; }
+  .wiki-breadcrumb span { color: var(--gold); }
+  .wiki-h1 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .wiki-infobox {
+    float: right; width: 200px; background: var(--dark3);
+    border: 0.5px solid var(--border-dim); border-radius: 8px;
+    padding: 14px; margin: 0 0 16px 20px; font-size: 11px;
+  }
+  .wiki-infobox img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; background: var(--dark4); display: block; }
+  .infobox-img-placeholder { width: 100%; height: 90px; border-radius: 6px; margin-bottom: 10px; background: linear-gradient(135deg, var(--dark4) 0%, #2A2830 100%); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  .ib-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .ib-label { color: var(--text-dim); } .ib-val { color: var(--text); font-weight: 500; }
+  .wiki-text { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+  .wiki-h2 { font-size: 14px; font-weight: 600; color: var(--text); margin: 20px 0 8px; border-bottom: 0.5px solid var(--border-dim); padding-bottom: 6px; }
+  .wiki-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
+  .wiki-tag { font-size: 10px; color: var(--purple); background: rgba(155,127,212,0.1); border: 0.5px solid rgba(155,127,212,0.2); padding: 3px 10px; border-radius: 12px; }
+
+  /* STRUCTURE DIAGRAM */
+  .structure-diagram { background: var(--dark2); border: 0.5px solid var(--border-dim); border-radius: 14px; padding: 40px; }
+  .tree { }
+  .tree-root {
+    text-align: center; margin-bottom: 32px;
+  }
+  .tree-node {
+    display: inline-block; padding: 10px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.3px;
+  }
+  .node-root { background: rgba(201,168,76,0.12); border: 1px solid var(--gold); color: var(--gold); }
+  .node-cat { background: rgba(74,144,217,0.1); border: 0.5px solid rgba(74,144,217,0.3); color: #78B4E8; font-size: 12px; font-weight: 500; }
+  .node-page { background: var(--dark3); border: 0.5px solid var(--border-dim); color: var(--text-muted); font-size: 11px; font-weight: 400; padding: 6px 12px; }
+  .tree-branches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .tree-branch { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .branch-children { display: flex; flex-direction: column; gap: 6px; align-items: center; width: 100%; }
+  .connector { width: 1px; height: 20px; background: var(--border-dim); margin: 0 auto; }
+  .h-connector { height: 1px; background: var(--border-dim); }
+
+  /* TEMPLATES SHOWCASE */
+  .templates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .template-card {
+    background: var(--dark2); border: 0.5px solid var(--border-dim);
+    border-radius: 10px; overflow: hidden;
+  }
+  .template-header { padding: 14px 16px; border-bottom: 0.5px solid var(--border-dim); display: flex; align-items: center; gap: 10px; }
+  .template-icon { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .template-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .template-body { padding: 14px 16px; }
+  .field-row { margin-bottom: 8px; }
+  .field-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px; }
+  .field-val { font-size: 11px; color: var(--text-muted); background: var(--dark3); border-radius: 4px; padding: 4px 8px; }
+  .field-val.placeholder { color: var(--text-dim); font-style: italic; }
+
+  /* PROCESS */
+  .process-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; }
+  .process-step { padding: 32px 28px; position: relative; }
+  .process-step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+    color: var(--text-dim); font-size: 18px; z-index: 1;
+  }
+  .step-num { font-size: 11px; color: var(--gold); letter-spacing: 2px; margin-bottom: 12px; font-weight: 600; }
+  .step-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+  /* BEFORE AFTER */
+  .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .ba-card { border-radius: 10px; overflow: hidden; }
+  .ba-header { padding: 12px 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .ba-before .ba-header { background: rgba(226,75,74,0.1); color: #E24B4A; border-bottom: 0.5px solid rgba(226,75,74,0.15); }
+  .ba-after .ba-header { background: rgba(91,175,122,0.1); color: var(--green); border-bottom: 0.5px solid rgba(91,175,122,0.15); }
+  .ba-body { background: var(--dark2); padding: 20px; border: 0.5px solid var(--border-dim); border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+  .ba-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 13px; color: var(--text-muted); }
+  .ba-item::before { font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+  .ba-before .ba-item::before { content: '✗'; color: #E24B4A; }
+  .ba-after .ba-item::before { content: '✓'; color: var(--green); }
+
+  /* TESTIMONIAL */
+  .testimonial-box {
+    background: var(--dark2); border: 0.5px solid var(--border);
+    border-radius: 16px; padding: 48px; text-align: center; position: relative;
+  }
+  .testimonial-box::before {
+    content: '"'; font-family: 'Playfair Display', serif;
+    font-size: 120px; color: var(--gold); opacity: 0.1;
+    position: absolute; top: -20px; left: 30px; line-height: 1;
+  }
+  .testimonial-text { font-size: 18px; color: var(--text); line-height: 1.75; font-style: italic; margin-bottom: 28px; position: relative; }
+  .testimonial-author { font-size: 13px; color: var(--gold); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .testimonial-role { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+  /* CTA */
+  .cta-section {
+    text-align: center; padding: 100px 40px;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.04), transparent);
+  }
+  .cta-title { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 56px); font-weight: 700; margin-bottom: 20px; }
+  .cta-sub { font-size: 16px; color: var(--text-muted); margin-bottom: 40px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold); color: var(--dark); font-weight: 700; font-size: 14px;
+    padding: 14px 32px; border-radius: 8px; text-decoration: none; letter-spacing: 0.5px;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* FOOTER */
+  footer {
+    border-top: 0.5px solid var(--border-dim);
+    padding: 32px 40px; text-align: center;
+    font-size: 12px; color: var(--text-dim);
+  }
+  footer strong { color: var(--gold); }
+
+  /* DIVIDER */
+  .divider { height: 0.5px; background: var(--border-dim); max-width: 1100px; margin: 0 auto; }
+
+  @media (max-width: 700px) {
+    nav { padding: 0 20px; } .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .hero-stats { gap: 32px; flex-wrap: wrap; }
+    .mockup-body { grid-template-columns: 1fr; }
+    .wiki-sidebar { display: none; }
+    .tree-branches { grid-template-columns: repeat(2, 1fr); }
+    .ba-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; }
+    .process-step::after { display: none; }
+    .project-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Maaz · Portfolio</div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="#process">Process</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Wiki Architecture & Information Design</div>
+    <h1>Building Wikis That<br><span>Worlds Are Made Of</span></h1>
+    <p class="hero-sub">I design and architect game wikis — full page hierarchies, navigation systems, content templates, and style guides — so your lore lives in a place players actually want to explore.</p>
+    <a href="#work" class="btn-primary">View My Work ↓</a>
+    <div class="hero-stats">
+      <div>
+        <span class="stat-num">5+</span>
+        <span class="stat-label">Wikis Structured</span>
+      </div>
+      <div>
+        <span class="stat-num">200+</span>
+        <span class="stat-label">Pages Organized</span>
+      </div>
+      <div>
+        <span class="stat-num">8+</span>
+        <span class="stat-label">Template Systems</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <span class="section-label">What I Do</span>
+  <h2 class="section-title">Wiki Management, Start to Finish</h2>
+  <p class="section-sub">I don't write the lore — I build the architecture that makes lore feel legendary.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🗺️</div>
+      <h3>Wiki Structure Design</h3>
+      <p>Full page hierarchy mapping — every category, subcategory, and page planned before a word is written. No orphan pages, no dead ends.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📐</div>
+      <h3>Template Creation</h3>
+      <p>Standardized infobox and article templates for characters, items, locations, lore, and factions — so every page looks professional automatically.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🧭</div>
+      <h3>Navigation Systems</h3>
+      <p>Top nav, sidebar menus, breadcrumbs, hub pages, and category trees — designed so players find what they need in 2 clicks or less.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📋</div>
+      <h3>Style Guide & Writer Docs</h3>
+      <p>Clear contributor guidelines so your writing team can populate any page consistently, without needing to ask how to format it.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📦</div>
+      <h3>Content Organization</h3>
+      <p>Taking raw content from writers and placing it into the correct structure, sections, and templates — clean and properly tagged every time.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚀</div>
+      <h3>Launch-Ready Setup</h3>
+      <p>Fandom or custom wiki platform setup — categories wired, main page built, navigation live, and everything production-ready before day one.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PORTFOLIO PROJECTS -->
+<section id="work">
+  <span class="section-label">Case Studies</span>
+  <h2 class="section-title">Wiki Projects</h2>
+  <p class="section-sub">Real structures, real templates, real navigation systems — built for game communities that needed more than a default wiki.</p>
+
+  <!-- PROJECT 1: Voidborn Chronicles -->
+  <div class="project">
+    <div class="project-header">
+      <div class="project-meta">
+        <div class="project-tag">🌌 Sci-Fi RPG · Open World · Fandom Platform</div>
+        <div class="project-title">Voidborn Chronicles Wiki</div>
+        <p class="project-desc">Built the full wiki architecture for a sci-fi open-world RPG set across five dying star systems. Designed the complete page hierarchy, infobox templates for factions, ships, planets, and characters, a contributor style guide, and the main hub navigation — ready for the game's early access launch with a six-person writing team.</p>
+        <div class="project-results">
+          <div class="result-pill">Full page hierarchy mapped</div>
+          <div class="result-pill">9 template types built</div>
+          <div class="result-pill">Navigation system live</div>
+          <div class="result-pill">Style guide delivered</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wiki Mockup -->
+    <div class="wiki-mockup">
+      <div class="mockup-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="mockup-url">voidbornchronicles.fandom.com/wiki/Kael_Dross</div>
+      </div>
+      <div class="mockup-body">
+        <div class="wiki-sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-heading">Navigation</div>
+            <a class="sidebar-item active">🏠 Main Page</a>
+            <a class="sidebar-item">📖 New Player Guide</a>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-heading">Gameplay</div>
+            <a class="sidebar-item">🚀 Ships & Builds</a>
+            <div class="sidebar-sub">
+              <a class="sidebar-item">Ship Classes</a>
+              <a class="sidebar-item">Weapons</a>
+              <a class="sidebar-item">Upgrades</a>
+            </div>
+            <a class="sidebar-item">🪐 Planets & Zones</a>
+            <a class="sidebar-item">👾 Enemy Fleet</a>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-heading">Lore</div>
+            <a class="sidebar-item">🌌 The Five Systems</a>
+            <a class="sidebar-item">🧬 Factions</a>
+            <a class="sidebar-item">👤 Characters</a>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-heading">Community</div>
+            <a class="sidebar-item">📋 Patch Notes</a>
+            <a class="sidebar-item">🏆 Tier Lists</a>
+          </div>
+        </div>
+        <div class="wiki-content">
+          <div class="wiki-breadcrumb">Voidborn Wiki › Characters › <span>Kael Dross</span></div>
+          <div class="wiki-h1">Kael Dross</div>
+          <div class="wiki-infobox">
+            <div class="infobox-img-placeholder">🧑‍🚀</div>
+            <div class="ib-row"><span class="ib-label">Role</span><span class="ib-val">Smuggler</span></div>
+            <div class="ib-row"><span class="ib-label">Faction</span><span class="ib-val" style="color:#78B4E8">Drifter Pact</span></div>
+            <div class="ib-row"><span class="ib-label">Home System</span><span class="ib-val">Nox Prime</span></div>
+            <div class="ib-row"><span class="ib-label">Ship</span><span class="ib-val">The Pale Needle</span></div>
+            <div class="ib-row"><span class="ib-label">Status</span><span class="ib-val" style="color:var(--green)">Active</span></div>
+          </div>
+          <p class="wiki-text">Kael Dross is a veteran smuggler and de facto leader of the Drifter Pact, operating out of Nox Prime's shattered asteroid belt. Known for running cargo through Void Lanes declared impassable by the Hegemony, Kael became a player-ally in Chapter 2 following the Siege of Colde Station.</p>
+          <div class="wiki-h2">Background</div>
+          <p class="wiki-text"><strong style="color:var(--text)">Early Life</strong> — Born on the colony ship Meridian IV before it was decommissioned, Dross grew up trading salvage rights on the outer rim of the Nox system.</p>
+          <div class="wiki-tags">
+            <span class="wiki-tag">Characters</span>
+            <span class="wiki-tag">Drifter Pact</span>
+            <span class="wiki-tag">Nox Prime</span>
+            <span class="wiki-tag">Ally NPC</span>
+            <span class="wiki-tag">Chapter 2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT 2: Ashfall Tactics -->
+  <div class="project" style="margin-top: 80px;">
+    <div class="project-header">
+      <div class="project-meta">
+        <div class="project-tag">♟️ Tactical Strategy · Post-Apocalyptic · Wiki.gg Platform</div>
+        <div class="project-title">Ashfall Tactics Wiki</div>
+        <p class="project-desc">Architected the wiki for a post-apocalyptic turn-based tactics game with deep unit customization and a branching campaign. Designed a hierarchy covering units, commanders, maps, missions, and faction lore — plus a complete template system and tagging convention so the wiki stays searchable as content scales.</p>
+        <div class="project-results">
+          <div class="result-pill">300+ pages pre-planned</div>
+          <div class="result-pill">6 infobox templates</div>
+          <div class="result-pill">Category tagging system</div>
+          <div class="result-pill">Mission guide format built</div>
+        </div>
+      </div>
+    </div>
+    <div class="structure-diagram">
+      <div class="tree-root">
+        <div class="tree-node node-root">🌋 Ashfall Tactics Wiki</div>
+      </div>
+      <div class="connector"></div>
+      <div class="tree-branches">
+        <div class="tree-branch">
+          <div class="tree-node node-cat">🪖 Units</div>
+          <div class="connector"></div>
+          <div class="branch-children">
+            <div class="tree-node node-page">Infantry</div>
+            <div class="tree-node node-page">Vehicles</div>
+            <div class="tree-node node-page">Support</div>
+            <div class="tree-node node-page">Elites</div>
+          </div>
+        </div>
+        <div class="tree-branch">
+          <div class="tree-node node-cat">🎖️ Commanders</div>
+          <div class="connector"></div>
+          <div class="branch-children">
+            <div class="tree-node node-page">Abilities</div>
+            <div class="tree-node node-page">Skill Trees</div>
+            <div class="tree-node node-page">Backstory</div>
+            <div class="tree-node node-page">Unlock Conditions</div>
+          </div>
+        </div>
+        <div class="tree-branch">
+          <div class="tree-node node-cat">🗺️ Missions</div>
+          <div class="connector"></div>
+          <div class="branch-children">
+            <div class="tree-node node-page">Campaign</div>
+            <div class="tree-node node-page">Skirmish Maps</div>
+            <div class="tree-node node-page">Objectives</div>
+            <div class="tree-node node-page">Rewards</div>
+          </div>
+        </div>
+        <div class="tree-branch">
+          <div class="tree-node node-cat">🏴 Factions</div>
+          <div class="connector"></div>
+          <div class="branch-children">
+            <div class="tree-node node-page">The Ashen Guard</div>
+            <div class="tree-node node-page">Rust Collective</div>
+            <div class="tree-node node-page">Free Wastes</div>
+            <div class="tree-node node-page">Relations Map</div>
+          </div>
+        </div>
+        <div class="tree-branch">
+          <div class="tree-node node-cat">🔧 Mechanics</div>
+          <div class="connector"></div>
+          <div class="branch-children">
+            <div class="tree-node node-page">Turn System</div>
+            <div class="tree-node node-page">Cover & Terrain</div>
+            <div class="tree-node node-page">Morale System</div>
+            <div class="tree-node node-page">Supply Chains</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT 3: Moonveil Online -->
+  <div class="project" style="margin-top: 80px;">
+    <div class="project-header">
+      <div class="project-meta">
+        <div class="project-tag">🌙 Fantasy MMORPG · Crafting & Guilds · Fandom Platform</div>
+        <div class="project-title">Moonveil Online Wiki</div>
+        <p class="project-desc">Designed the wiki system for a fantasy MMORPG centered on guild warfare and deep crafting economies. Built templates for spells, professions, guild halls, world events, and NPC merchants — organized across a clean 4-tier category system. Delivered the full contributor guide and onboarded a 10-person volunteer writing team.</p>
+        <div class="project-results">
+          <div class="result-pill">10 writers onboarded</div>
+          <div class="result-pill">4-tier category system</div>
+          <div class="result-pill">Crafting economy templates</div>
+          <div class="result-pill">Launch-ready in 3 weeks</div>
+        </div>
+      </div>
+    </div>
+    <div class="templates-grid">
+      <div class="template-card">
+        <div class="template-header">
+          <div class="template-icon" style="background:rgba(155,127,212,0.12)">🧝</div>
+          <div class="template-name">Character / NPC</div>
+        </div>
+        <div class="template-body">
+          <div class="field-row"><div class="field-label">Name</div><div class="field-val placeholder">Full character name</div></div>
+          <div class="field-row"><div class="field-label">Race</div><div class="field-val placeholder">Elf / Human / Fae / etc.</div></div>
+          <div class="field-row"><div class="field-label">Class</div><div class="field-val placeholder">Ranger / Warden / etc.</div></div>
+          <div class="field-row"><div class="field-label">Location</div><div class="field-val placeholder">Zone or city found in</div></div>
+          <div class="field-row"><div class="field-label">Role</div><div class="field-val placeholder">Quest giver / Merchant / Boss</div></div>
+        </div>
+      </div>
+      <div class="template-card">
+        <div class="template-header">
+          <div class="template-icon" style="background:rgba(201,168,76,0.12)">🌿</div>
+          <div class="template-name">Crafting Recipe</div>
+        </div>
+        <div class="template-body">
+          <div class="field-row"><div class="field-label">Item Name</div><div class="field-val placeholder">Crafted item name</div></div>
+          <div class="field-row"><div class="field-label">Profession</div><div class="field-val placeholder">Alchemy / Smithing / etc.</div></div>
+          <div class="field-row"><div class="field-label">Skill Level</div><div class="field-val placeholder">Required level 000</div></div>
+          <div class="field-row"><div class="field-label">Ingredients</div><div class="field-val placeholder">List of materials needed</div></div>
+          <div class="field-row"><div class="field-label">Output</div><div class="field-val placeholder">Quantity produced</div></div>
+        </div>
+      </div>
+      <div class="template-card">
+        <div class="template-header">
+          <div class="template-icon" style="background:rgba(74,144,217,0.12)">✨</div>
+          <div class="template-name">Spell / Ability</div>
+        </div>
+        <div class="template-body">
+          <div class="field-row"><div class="field-label">Spell Name</div><div class="field-val placeholder">Full ability name</div></div>
+          <div class="field-row"><div class="field-label">School</div><div class="field-val placeholder">Lunar / Shadow / Storm</div></div>
+          <div class="field-row"><div class="field-label">Cast Time</div><div class="field-val placeholder">Instant / 1.5s / 3s</div></div>
+          <div class="field-row"><div class="field-label">Cooldown</div><div class="field-val placeholder">00 seconds</div></div>
+          <div class="field-row"><div class="field-label">Unlock At</div><div class="field-val placeholder">Level 00 / Quest reward</div></div>
+        </div>
+      </div>
+      <div class="template-card">
+        <div class="template-header">
+          <div class="template-icon" style="background:rgba(91,175,122,0.12)">🏰</div>
+          <div class="template-name">Zone / Region</div>
+        </div>
+        <div class="template-body">
+          <div class="field-row"><div class="field-label">Zone Name</div><div class="field-val placeholder">Full zone name</div></div>
+          <div class="field-row"><div class="field-label">Recommended Level</div><div class="field-val placeholder">Level range 00–00</div></div>
+          <div class="field-row"><div class="field-label">Controlling Faction</div><div class="field-val placeholder">Guild / Faction name</div></div>
+          <div class="field-row"><div class="field-label">Key Resources</div><div class="field-val placeholder">Harvestable materials</div></div>
+          <div class="field-row"><div class="field-label">World Boss</div><div class="field-val placeholder">Boss name (respawn timer)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BEFORE / AFTER -->
+<section>
+  <span class="section-label">Transformation</span>
+  <h2 class="section-title">Before vs. After</h2>
+  <p class="section-sub">What a wiki looks like when it's just set up vs. after I've architected it properly.</p>
+  <div class="ba-grid">
+    <div class="ba-card ba-before">
+      <div class="ba-header">❌ Before: Unstructured Wiki</div>
+      <div class="ba-body">
+        <div class="ba-item">Random pages with no categories or linking</div>
+        <div class="ba-item">Inconsistent formatting — every writer does it differently</div>
+        <div class="ba-item">No navigation — players can't find anything</div>
+        <div class="ba-item">Missing templates — infoboxes created by hand each time</div>
+        <div class="ba-item">No style guide — new contributors create chaos</div>
+        <div class="ba-item">Main page is empty or a default stub</div>
+        <div class="ba-item">Duplicate pages for the same content</div>
+      </div>
+    </div>
+    <div class="ba-card ba-after">
+      <div class="ba-header">✓ After: Architected Wiki</div>
+      <div class="ba-body">
+        <div class="ba-item">Full category tree — every page has its place</div>
+        <div class="ba-item">Template system — consistent layout across all pages</div>
+        <div class="ba-item">Sidebar + top nav — players find content in 2 clicks</div>
+        <div class="ba-item">Infobox templates — writers just fill in the fields</div>
+        <div class="ba-item">Style guide delivered — any writer can contribute correctly</div>
+        <div class="ba-item">Hub pages for each major section — professional entry points</div>
+        <div class="ba-item">Breadcrumbs + tags — content is always findable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROCESS -->
+<section id="process">
+  <span class="section-label">How It Works</span>
+  <h2 class="section-title">My Process</h2>
+  <p class="section-sub">From first conversation to launch-ready wiki — here's how I work.</p>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-title">Discovery Call</div>
+      <div class="step-desc">I learn your game's content — gameplay systems, lore scope, writing team size, and launch timeline.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-title">Architecture Plan</div>
+      <div class="step-desc">I map the full page hierarchy and category tree, delivered as a document for your review before anything is built.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-title">Template Build</div>
+      <div class="step-desc">I create every infobox and article template on the platform — tested and ready for writers to use immediately.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Navigation & Hub Pages</div>
+      <div class="step-desc">Main page, sidebar, top nav, and category hub pages — the wiki's skeleton is fully live and navigable.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">05</div>
+      <div class="step-title">Style Guide Delivery</div>
+      <div class="step-desc">A clear contributor guide so your writers know exactly how to format, tag, and file every type of content.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIAL (placeholder) -->
+<section>
+  <div class="testimonial-box">
+    <p class="testimonial-text">The wiki structure Maaz built for our game launch was exactly what we needed — every template was ready, the navigation made sense immediately, and our writers could just focus on content instead of figuring out how to format things. We went from a blank Fandom to a launch-ready wiki in under two weeks.</p>
+    <div class="testimonial-author">Game Studio Client</div>
+    <div class="testimonial-role">Crypto Play-to-Earn Project · Fandom Wiki</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="contact">
+  <h2 class="cta-title">Ready to Build Your Wiki?</h2>
+  <p class="cta-sub">Game launches with a broken wiki lose players on day one. Let's get yours structured, templated, and ready before your launch date.</p>
+  <a href="mailto:your@email.com" class="btn-primary">Get in Touch →</a>
+</div>
+
+<footer>
+  <p>Built by <strong>Maaz</strong> · Wiki Architecture & Information Design · <strong>Available for new projects</strong></p>
+</footer>
+
+</body>
+</html>
